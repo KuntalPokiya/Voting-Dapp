@@ -18,7 +18,6 @@ const CandidateRegister = ({ account }) => {
     await contract.methods.candidateRegister(name,party,age,gender).send({from:account,gas:480000})
     alert("Registration Successfull")
   }
-}
 
   return (
     <>
