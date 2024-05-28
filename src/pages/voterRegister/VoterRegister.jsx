@@ -16,10 +16,30 @@ const VoterRegister = ({ account }) => {
     const age = document.querySelector("#age").value;
     const gender = document.querySelector("#gender").value;
 
-    await contract.methods.voterRegister(name,age,gender).send({from:account,gas:480000})
-    alert("Registration Successful")
-  }
+ const voterData={
+      gender
+    }
 
+    try{
+    const res = await fetch("http://localhost:3000/api/voter-verification",{
+      method:"POST",
+      headers:{
+        "content-type":"application/json"
+      },
+      body:JSON.stringify(voterData)
+    })
+    const data=await res.json();
+    if(data.message==="Gender is Valid"){
+        await contract.methods.voterRegister(name,age,gender).send({from:account,gas:480000})
+        alert("Registration Successful")
+    }else{
+      alert("Registration isn't successful")
+    }
+  }
+    catch(error){
+      console.error("Registration unsuccessful")
+    }
+  }
   return (
     <>
       <Navigation account={account} />
