@@ -14,9 +14,31 @@ const CandidateRegister = ({ account }) => {
     const party = document.querySelector("#party").value;
     const age = document.querySelector("#age").value;
     const gender = document.querySelector("#gender").value;
-    
-    await contract.methods.candidateRegister(name,party,age,gender).send({from:account,gas:480000})
-    alert("Registration Successfull")
+
+    const partyData={
+      party,
+      gender
+    }
+
+    try{
+    const res = await fetch("http://localhost:3000/api/candidate-verification",{
+      method:"POST",
+      headers:{
+        "content-type":"application/json"
+      },
+      body:JSON.stringify(partyData)
+    })
+    const data=await res.json();
+    if(data.message==="Gender and Party are valid"){
+       await contract.methods.candidateRegister(name,party,age,gender).send({from:account,gas:480000})
+       alert("Registration Successfull")
+    }else{
+      alert("Registration isn't successful")
+    }
+  }
+    catch(error){
+      console.error("Registration unsuccessful")
+    }
   }
 
   return (
