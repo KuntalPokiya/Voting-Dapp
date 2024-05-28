@@ -52,7 +52,7 @@ app.post("/api/candidate-verification",async(req,res)=>{
     const genderStatus = genderVerification(gender);
 
     if(genderStatus===true && partyStatus!==true){
-        res.status(200).json({message:"Registration successfule"})
+        res.status(200).json({message:"Gender and Party are valid"})
     }else{
         res.status(403).json({message:"Either Party Name or Gender is not valid"})
     }
