@@ -5,16 +5,45 @@ import { WalletContext } from "../../components/wallet/Wallet";
 import "./ElectionCommision.css";
 import { toast } from "react-hot-toast";
 
-const ElectionCommision = () => {
+const ElectionCommision = (account) => {
+  const {contract}=useContext(WalletContext);
+  const [winner,setWinner]=useState("No Winner")
+
+  const startVoting=async(e)=>{
+    e.preventDefault()
+    const startTime=document.querySelector("#start").value;
+    const endTime=document.querySelector("#end").value;
+    await contract.methods.voteTime(startTime,endTime).send({from:account,gas:480000})
+    alert("Voting Started")
+  }
+
+  useEffect(()=>{
+    const winnerInfo=async()=>{
+      const winner=await contract.methods.winner().call();
+      setWinner(winner);
+    }
+    contract && winnerInfo()
+  },[contract])
+
+  const resultDeclared=async()=>{
+    await contract.methods.result().send({from:account});
+    alert("Result Declared")
+  }
+
+    const emergencyDeclared=async()=>{
+    await contract.methods.emergency().send({from:account});
+    alert("Emergency Declared")
+  }
+  
   return (
     <>
       <div>
         <Navigation account={account} />
         <div className="election-wrapper">
           <h2>
-            Winner is: <br />
+            Winner is: {winner} <br />
           </h2>
-          <form className="election-form">
+          <form className="election-form" onSubmit={startVoting}>
             <label htmlFor="start">Start Time</label>
             <input type="datetime-local" id="start" required />
 
@@ -27,10 +56,10 @@ const ElectionCommision = () => {
           </form>
         </div>
         <div className="admin-actions">
-          <button className="emerBtn" onClick={emergency}>
+          <button className="emerBtn" onClick={emergencyDeclared}>
             Emergency
           </button>
-          <button className="resultBtn" onClick={result}>
+          <button className="resultBtn" onClick={resultDeclared}>
             Result
           </button>
         </div>
