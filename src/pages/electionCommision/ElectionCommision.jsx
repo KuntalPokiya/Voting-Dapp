@@ -9,12 +9,44 @@ const ElectionCommision = (account) => {
   const {contract}=useContext(WalletContext);
   const [winner,setWinner]=useState("No Winner")
 
+  const dateToSeconds=(dateTimeString)=>{ // to convert select date-time into blockchain timestammp
+    const date= new Date(dateTimeString);
+    return Math.floor(date.getTime()/1000);
+  };
+
   const startVoting=async(e)=>{
     e.preventDefault()
     const startTime=document.querySelector("#start").value;
     const endTime=document.querySelector("#end").value;
-    await contract.methods.voteTime(startTime,endTime).send({from:account,gas:480000})
-    alert("Voting Started")
+    const startTimeSeconds= dateToSeconds(startTime);
+    const endTimeSeconds= dateToSeconds(endTime);
+
+    const time{
+      startTimeSeconds,
+      endTimeSeconds
+    }
+
+    try{
+    const res = await fetch("http://localhost:3000/api/time-bound",{
+      method:"POST",
+      headers:{
+        "content-type":"application/json"
+      },
+      body:JSON.stringify(time)
+    })
+    const data=await res.json();
+    if(data.message==="Voting Timer Started"){
+       await contract.methods.voteTime(startTime,endTime).send({from:account,gas:480000})
+       alert("Voting Started")
+    }else{
+      alert("Voting Timer hasn't been set")
+    }
+  }
+    catch(error){
+      console.error(error)
+    }
+
+    
   }
 
   useEffect(()=>{
