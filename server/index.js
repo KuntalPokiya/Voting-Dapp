@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const cors = require("cors")
+app.use(cors())
 const {Web3} = require("web3");
 const ABI = require("./ABI.json")
 
@@ -29,15 +31,15 @@ app.post("/api/voter-verfication",(req,res)=>{
     const {gender} = req.body;
     const status = genderVerification(gender)
     if(status){
-       res.status(200).json({message:"Registration successful"})
+       res.status(200).json({message:"Gender is Valid"})
     }else{
         res.status(403).json({message:"Gender Invalid"})
     } 
 })
 
 app.post("/api/time-bound",(req,res)=>{
-    const {startTime,endTime}=req.body;
-    if(endTime-startTime<86400){
+    const {startTimeSeconds,endTimeSeconds}=req.body;
+    if(endTimeSeconds-startTimeSeconds<86400){
         res.status(200).json({message:"Voting Timer Started"})
     }else{
         res.status(403).json({message:"Voting Time Must Be Less Than 24 hours"})
