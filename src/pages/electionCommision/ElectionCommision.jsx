@@ -21,7 +21,7 @@ const ElectionCommision = (account) => {
     const startTimeSeconds= dateToSeconds(startTime);
     const endTimeSeconds= dateToSeconds(endTime);
 
-    const time{
+    const time={
       startTimeSeconds,
       endTimeSeconds
     }
@@ -56,6 +56,7 @@ const ElectionCommision = (account) => {
         setWinner("not declared yet")
       }else{
       setWinner(winner);
+    }
     }
     contract && winnerInfo()
   },[contract])
