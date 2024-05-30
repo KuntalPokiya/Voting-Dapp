@@ -36,7 +36,7 @@ const ElectionCommision = (account) => {
     })
     const data=await res.json();
     if(data.message==="Voting Timer Started"){
-       await contract.methods.voteTime(startTime,endTime).send({from:account,gas:480000})
+       await contract.methods.voteTime(startTimeSeconds,endTimeSeconds).send({from:account,gas:480000})
        alert("Voting Started")
     }else{
       alert("Voting Timer hasn't been set")
@@ -52,6 +52,9 @@ const ElectionCommision = (account) => {
   useEffect(()=>{
     const winnerInfo=async()=>{
       const winner=await contract.methods.winner().call();
+      if(winner==="0x0000000000000000000000000000000000000000"){
+        setWinner("not declared yet")
+      }else{
       setWinner(winner);
     }
     contract && winnerInfo()
