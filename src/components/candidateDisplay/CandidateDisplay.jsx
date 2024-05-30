@@ -30,7 +30,7 @@ const CandidateDisplay = () => {
         <td>{candidate.name}</td>
         <td>{candidate.party}</td>
         <td>{candidate.votes}</td>
-      </tr>)
+      </tr>);
           }))
           :<p></p>
           }
