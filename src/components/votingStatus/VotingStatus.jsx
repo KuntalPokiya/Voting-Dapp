@@ -10,7 +10,7 @@ const VotingStatus = () => {
       const status=await contract.methods.votingStatus().call();
       setVoteStatus(status)
     }
-    contact && statusVoting()
+    contract && statusVoting()
   },[contract])
   const statusColor = voteStatus === "Voting in progress" ? "#2DFF2D" : "red";
 
